@@ -166,11 +166,13 @@ services:
       - '27026:27017'
     networks:
       - app-network
+    depends_on:
+      - configSrv
     command:
       [
         'mongos',
         '--configdb',
-        'config_server/configSrv_cache:27017',
+        'config_server/configSrv:27017',
         '--bind_ip_all',
         '--port',
         '27017',

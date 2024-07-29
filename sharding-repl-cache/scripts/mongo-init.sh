@@ -33,7 +33,7 @@ rs.initiate(
 exit();
 EOF
 
-wait_for 3
+wait_for 1
 
 # Initialize shard1
 check_container_running "shard1-a"
@@ -52,7 +52,7 @@ rs.initiate(
 exit();
 EOF
 
-wait_for 3
+wait_for 1
 
 # Initialize shard2
 check_container_running "shard2-a"
@@ -71,35 +71,33 @@ rs.initiate(
 exit();
 EOF
 
-wait_for 3
+wait_for 1
 
 # Configure sharding in mongos_router
 check_container_running "mongos_router"
-docker compose exec -T mongos_router mongosh --port 27017 --quiet <<EOF
+docker-compose exec -T mongos_router mongosh --port 27017 <<EOF
 sh.addShard("shard1/shard1-a:27017");
-sh.addShard("shard1/shard1-b:27017");
-sh.addShard("shard1/shard1-c:27017");
-sh.addShard("shard1/shard1-d:27017");
-
 sh.addShard("shard2/shard2-a:27017");
-sh.addShard("shard2/shard2-b:27017");
-sh.addShard("shard2/shard2-c:27017");
-sh.addShard("shard2/shard2-d:27017");
 
 sh.enableSharding("somedb");
 sh.shardCollection("somedb.helloDoc", { "name" : "hashed" });
 
 use somedb;
 
+const docs = [];
 for (var i = 0; i < 1000; i++) {
-  db.helloDoc.insert({age: i, name: "ly" + i});
+  docs.push({age: i, name: "ly" + i});
+}
+const batchSize = 100;
+for (let i = 0; i < docs.length; i += batchSize) {
+  db.helloDoc.insertMany(docs.slice(i, i + batchSize));
 }
 
 db.helloDoc.countDocuments();
 exit();
 EOF
 
-wait_for 3
+wait_for 1
 
 # Check the document count on shard1
 docker compose exec -T shard1-a mongosh --port 27017 --quiet <<EOF
@@ -108,7 +106,7 @@ db.helloDoc.countDocuments();
 exit();
 EOF
 
-wait_for 3
+wait_for 1
 
 # Check the document count on shard2
 docker compose exec -T shard2-a mongosh --port 27017 --quiet <<EOF
