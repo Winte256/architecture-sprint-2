@@ -1,14 +1,12 @@
-# pymongo-api
-
 ## Как запустить
 
-Запускаем mongodb и приложение
+Запускаем mongodb, redis и приложение
 
 ```shell
 docker compose up -d
 ```
 
-Заполняем mongodb данными
+Инициализируем контейнеры
 
 ```shell
 ./scripts/mongo-init.sh
