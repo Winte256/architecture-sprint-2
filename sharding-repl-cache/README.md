@@ -1,5 +1,7 @@
 # draw.io
-[link to file](https://drive.google.com/file/d/18m9Qc9q3k9XdvEEW0YAbDCZjYfbxZmRY/view?usp=sharing)
+
+ - Спасибо за ревью :*
+ - [link to file](https://drive.google.com/file/d/18m9Qc9q3k9XdvEEW0YAbDCZjYfbxZmRY/view?usp=sharing)
 
 # pymongo-api
 
